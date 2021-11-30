@@ -1,0 +1,13 @@
+import gleam/list
+import gleam/result
+import gleam/string
+import gleam_array
+
+external fn read_file(name: String) -> Result(String, String) =
+  "file" "read_file"
+
+pub fn read_lines(file_path: String) -> Result(List(String), String) {
+  file_path
+  |> read_file
+  |> result.map(fn(contents) { string.split(contents, on: "\n") })
+}
