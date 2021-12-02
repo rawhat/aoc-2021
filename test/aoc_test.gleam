@@ -3,9 +3,7 @@ import gleam/io
 import gleam/order
 import gleam/string
 import matrix
-
-pub external fn should_equal(a, a) -> Nil =
-  "gleam_stdlib" "should_equal"
+import util.{should_equal}
 
 pub fn main() {
   gleeunit.main()

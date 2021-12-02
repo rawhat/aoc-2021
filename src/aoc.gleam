@@ -1,8 +1,16 @@
 import gleam/io
+import gleam/list
 import util
+import days/one
 
 pub fn main() {
-  let res = util.read_lines("/home/alex/gleams/aoc-2021/src/aoc.gleam")
-  io.debug(res)
-  io.println("Hello from aoc!")
+  [#(one.part_one, "Day 1 Part 1: "), #(one.part_two, "Day 1 Part 2: ")]
+  |> list.each(fn(day) {
+    case day {
+      #(func, message) -> {
+        io.print(message)
+        func()
+      }
+    }
+  })
 }
