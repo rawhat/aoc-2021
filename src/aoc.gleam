@@ -3,6 +3,7 @@ import gleam/list
 import util
 import days/one
 import days/two
+import days/three
 
 pub fn main() {
   [
@@ -10,6 +11,8 @@ pub fn main() {
     #(one.part_two, "Day 1 Part 2: "),
     #(two.part_one, "Day 2 Part 1: "),
     #(two.part_two, "Day 2 Part 2: "),
+    #(three.part_one, "Day 3 Part 1: "),
+    #(three.part_two, "Day 3 Part 2: "),
   ]
   |> list.each(fn(day) {
     case day {
