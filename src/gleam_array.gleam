@@ -1,3 +1,8 @@
+import gleam/dynamic.{Dynamic}
+import gleam/erlang/atom
+import gleam/io
+import gleam/option.{None, Option, Some}
+
 pub external type Array(a)
 
 external fn array_size(array: Array(a)) -> Int =
@@ -12,7 +17,7 @@ external fn array_from_list(l: List(a)) -> Array(a) =
 external fn array_set(index: Int, value: a, arr: Array(a)) -> Array(a) =
   "array" "set"
 
-external fn array_get(index: Int, arr: Array(a)) -> a =
+external fn array_get(index: Int, arr: Array(a)) -> Dynamic =
   "array" "get"
 
 external fn array_fold(
@@ -54,8 +59,15 @@ pub fn set(arr: Array(a), index: Int, value: a) -> Array(a) {
   array_set(index, value, arr)
 }
 
-pub fn get(arr: Array(a), index: Int) -> a {
-  array_get(index, arr)
+pub fn get(arr: Array(a), index: Int) -> Option(a) {
+  let res = array_get(index, arr)
+
+  assert Ok(undefined) = atom.from_string("undefined")
+
+  case atom.from_dynamic(res) {
+    Ok(value) if value == undefined -> None
+    _ -> Some(dynamic.unsafe_coerce(res))
+  }
 }
 
 pub fn fold(arr: Array(a), initial: b, reducer: fn(a, b) -> b) -> b {

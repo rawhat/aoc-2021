@@ -1,6 +1,10 @@
 import gleeunit
+import gleam/int
 import gleam/io
+import gleam/iterator
 import gleam/order
+import gleam/pair
+import gleam/result
 import gleam/string
 import matrix
 import util.{should_equal}
@@ -46,4 +50,24 @@ pub fn set_at_value_test() {
 ")
 
   should_equal(m, expected)
+}
+
+pub fn iterating_should_modify_values_test() {
+  let mapped =
+    sample_text
+    |> matrix.from_string
+    |> matrix.iterate
+    |> iterator.map(fn(tup) { pair.map_second(tup, int.parse) })
+    |> iterator.map(fn(tup) { pair.map_second(tup, result.unwrap(_, 0)) })
+    |> iterator.map(fn(tup) { pair.map_second(tup, fn(v) { v * 2 }) })
+    |> matrix.from_iterator
+    |> matrix.to_string
+
+  let expected = string.trim_left("
+[2 4 6 8]
+[10 12 14 16]
+[18 20 22 24]
+")
+
+  should_equal(mapped, expected)
 }

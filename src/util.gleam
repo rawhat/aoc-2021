@@ -6,7 +6,7 @@ import gleam_array
 pub external fn should_equal(a, a) -> Nil =
   "gleam_stdlib" "should_equal"
 
-external fn read_file(name: String) -> Result(String, String) =
+pub external fn read_file(name: String) -> Result(String, String) =
   "file" "read_file"
 
 pub fn read_lines(file_path: String) -> Result(List(String), String) {
