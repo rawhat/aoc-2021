@@ -4,6 +4,7 @@ import gleam/iterator.{Done, Next}
 import gleam/list
 import gleam/map.{Map}
 import gleam/option.{None, Some}
+import gleam/order
 import gleam/pair
 import gleam/string
 import matrix
@@ -61,13 +62,13 @@ pub fn is_horizontal_or_vertical(line: Line) -> Bool {
 }
 
 pub fn get_range(from: Int, to: Int, other_size: Int) -> List(Int) {
-  case from, to {
-    _, _ if from == to ->
+  case int.compare(from, to) {
+    order.Eq ->
       0
       |> iterator.repeat
       |> iterator.take(other_size + 1)
-    _, _ if from < to -> iterator.range(0, to - from + 1)
-    _, _ if from > to -> iterator.range(0, to - from - 1)
+    order.Lt -> iterator.range(0, to - from + 1)
+    order.Gt -> iterator.range(0, to - from - 1)
   }
   |> iterator.to_list
 }
