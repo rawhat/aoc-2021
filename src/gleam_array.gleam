@@ -70,8 +70,30 @@ pub fn get(arr: Array(a), index: Int) -> Option(a) {
   }
 }
 
-pub fn fold(arr: Array(a), initial: b, reducer: fn(a, b) -> b) -> b {
-  array_fold(fn(_, item, accum) { reducer(item, accum) }, initial, arr)
+pub fn fold(arr: Array(a), initial: b, reducer: fn(b, Option(a)) -> b) -> b {
+  assert Ok(undefined) = atom.from_string("undefined")
+
+  array_fold(
+    fn(_, item, accum) {
+      let dynamic_item =
+        item
+        |> dynamic.from
+        |> atom.from_dynamic
+      let item_value = case dynamic_item {
+        Ok(value) if value == undefined -> None
+        _ ->
+          Some(
+            item
+            |> dynamic.from
+            |> dynamic.unsafe_coerce,
+          )
+      }
+
+      reducer(accum, item_value)
+    },
+    initial,
+    arr,
+  )
 }
 
 pub fn map(arr: Array(a), mapper: fn(a, Int) -> b) -> Array(b) {

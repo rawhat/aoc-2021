@@ -38,43 +38,55 @@ pub fn from_string(contents: String) -> Matrix(String) {
 
 pub fn to_string(matrix: Matrix(a)) -> String {
   let builder = string_builder.from_string("")
-  case matrix {
-    Matrix(array) ->
-      array
-      |> gleam_array.fold(
-        builder,
-        fn(row, acc) {
-          let value_strings =
-            row
-            |> gleam_array.map(fn(col, _) {
-              let col_dyn = dynamic.from(col)
-              case col_dyn
-              |> dynamic.classify {
-                "String" ->
-                  col_dyn
-                  |> dynamic.string
-                  |> result.unwrap("--")
-                "Int" ->
-                  col_dyn
-                  |> dynamic.int
-                  |> result.unwrap(-1)
-                  |> int.to_string
-                _ -> "??"
-              }
-            })
-            |> gleam_array.to_list
-            |> string.join(" ")
-          let row_builder =
-            "["
-            |> string_builder.from_string
-            |> string_builder.append(value_strings)
-            |> string_builder.append("]\n")
-            |> string_builder.to_string
-          string_builder.append(acc, row_builder)
-        },
-      )
-      |> string_builder.to_string
-  }
+  let Matrix(array) = matrix
+
+  let #(columns, rows) = get_dimensions(matrix)
+
+  array
+  |> gleam_array.fold(
+    builder,
+    fn(acc, maybe_row) {
+      let row = case maybe_row {
+        None ->
+          iterator.range(0, columns)
+          |> iterator.map(fn(_) {
+            "__"
+            |> dynamic.from
+            |> dynamic.unsafe_coerce
+          })
+          |> iterator.to_list
+          |> gleam_array.from_list
+        Some(arr) -> arr
+      }
+      let value_strings =
+        row
+        |> gleam_array.map(fn(col, _) {
+          let col_dyn = dynamic.from(col)
+          case dynamic.classify(col_dyn) {
+            "String" ->
+              col_dyn
+              |> dynamic.string
+              |> result.unwrap("--")
+            "Int" ->
+              col_dyn
+              |> dynamic.int
+              |> result.unwrap(-1)
+              |> int.to_string
+            _ -> "??"
+          }
+        })
+        |> gleam_array.to_list
+        |> string.join(" ")
+      let row_builder =
+        "["
+        |> string_builder.from_string
+        |> string_builder.append(value_strings)
+        |> string_builder.append("]\n")
+        |> string_builder.to_string
+      string_builder.append(acc, row_builder)
+    },
+  )
+  |> string_builder.to_string
 }
 
 pub fn new() -> Matrix(a) {
