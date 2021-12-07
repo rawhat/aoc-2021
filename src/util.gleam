@@ -1,4 +1,5 @@
 import gleam/list
+import gleam/pair
 import gleam/result
 import gleam/string
 import gleam_array
@@ -17,4 +18,13 @@ pub fn read_lines(file_path: String) -> Result(List(String), String) {
     |> string.trim
     |> string.split(on: "\n")
   })
+}
+
+pub external fn time_function(func: fn() -> Nil) -> #(Int, Nil) =
+  "timer" "tc"
+
+pub fn runtime_in_microseconds(func: fn() -> Nil) -> Int {
+  func
+  |> time_function
+  |> pair.first
 }
