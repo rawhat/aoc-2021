@@ -74,7 +74,7 @@ pub fn get_range(from: Int, to: Int, other_size: Int) -> List(Int) {
 }
 
 pub fn get_line_points(line: Line) -> List(Point) {
-  let Line(Point(x1, y1) as p1, Point(x2, y2) as p2) = line
+  let Line(Point(x1, y1), Point(x2, y2)) = line
 
   let x_range = get_range(x1, x2, int.max(y2 - y1, y1 - y2))
   let y_range = get_range(y1, y2, int.max(x2 - x1, x1 - x2))

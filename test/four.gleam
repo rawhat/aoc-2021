@@ -39,7 +39,7 @@ pub fn test_first_move_on_test_input_test() {
     iterator.range(0, 5)
     |> iterator.fold(game, fn(g, _) { four.draw_number(g) })
 
-  let [marked_one, marked_two, marked_three] =
+  let [marked_one, .._] =
     boards
     |> list.map(fn(board) {
       let Board(_, marked, _) = board

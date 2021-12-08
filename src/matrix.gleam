@@ -40,7 +40,7 @@ pub fn to_string(matrix: Matrix(a)) -> String {
   let builder = string_builder.from_string("")
   let Matrix(array) = matrix
 
-  let #(columns, rows) = get_dimensions(matrix)
+  let #(columns, _) = get_dimensions(matrix)
 
   array
   |> gleam_array.fold(
