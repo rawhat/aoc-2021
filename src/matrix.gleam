@@ -15,6 +15,12 @@ pub type Matrix(a) {
   Matrix(elements: Array(Array(a)))
 }
 
+pub type Point =
+  #(Int, Int)
+
+pub type Elements(a) =
+  #(Point, a)
+
 pub fn from_string(contents: String) -> Matrix(String) {
   assert Ok(re) = regex.from_string("\\s*([0-9]+)\\s*")
 
@@ -93,7 +99,7 @@ pub fn new() -> Matrix(a) {
   Matrix(gleam_array.new())
 }
 
-pub fn get(matrix: Matrix(a), location: #(Int, Int)) -> Option(a) {
+pub fn get(matrix: Matrix(a), location: Point) -> Option(a) {
   let #(x, y) = location
   case matrix {
     Matrix(arr) ->
@@ -104,7 +110,7 @@ pub fn get(matrix: Matrix(a), location: #(Int, Int)) -> Option(a) {
   }
 }
 
-pub fn set(matrix: Matrix(a), location: #(Int, Int), value: a) -> Matrix(a) {
+pub fn set(matrix: Matrix(a), location: Point, value: a) -> Matrix(a) {
   let #(x, y) = location
   case matrix {
     Matrix(arr) -> {
@@ -121,7 +127,7 @@ pub fn set(matrix: Matrix(a), location: #(Int, Int), value: a) -> Matrix(a) {
   }
 }
 
-pub fn from_iterator(iter: Iterator(#(#(Int, Int), a))) -> Matrix(a) {
+pub fn from_iterator(iter: Iterator(Elements(a))) -> Matrix(a) {
   iterator.fold(
     iter,
     new(),
@@ -132,7 +138,7 @@ pub fn from_iterator(iter: Iterator(#(#(Int, Int), a))) -> Matrix(a) {
   )
 }
 
-pub fn iterate(matrix: Matrix(a)) -> Iterator(#(#(Int, Int), a)) {
+pub fn iterate(matrix: Matrix(a)) -> Iterator(Elements(a)) {
   iterator.unfold(
     from: #(matrix, 0, 0),
     with: fn(acc) {
@@ -170,7 +176,7 @@ pub fn get_column(matrix: Matrix(a), index: Int) -> List(a) {
   |> iterator.to_list
 }
 
-pub fn get_dimensions(matrix: Matrix(a)) -> #(Int, Int) {
+pub fn get_dimensions(matrix: Matrix(a)) -> Point {
   let Matrix(values) = matrix
 
   let rows = gleam_array.size(values)
@@ -183,7 +189,7 @@ pub fn get_dimensions(matrix: Matrix(a)) -> #(Int, Int) {
   #(rows, columns)
 }
 
-pub fn rows(matrix: Matrix(a)) -> List(List(#(Int, Int))) {
+pub fn rows(matrix: Matrix(a)) -> List(List(Point)) {
   let #(row_count, column_count) = get_dimensions(matrix)
 
   iterator.range(0, row_count)
@@ -195,7 +201,7 @@ pub fn rows(matrix: Matrix(a)) -> List(List(#(Int, Int))) {
   |> iterator.to_list
 }
 
-pub fn columns(matrix: Matrix(a)) -> List(List(#(Int, Int))) {
+pub fn columns(matrix: Matrix(a)) -> List(List(Point)) {
   let #(row_count, column_count) = get_dimensions(matrix)
 
   iterator.range(0, column_count)

@@ -7,11 +7,11 @@ import gleam/pair
 import gleam/result
 import gleam/set.{Set}
 import gleam/string
-import matrix.{Matrix}
+import matrix.{Matrix, Point}
 import util.{read_file}
 
 pub type Board {
-  Board(matrix: Matrix(Int), marked: Set(#(Int, Int)), won: Option(Int))
+  Board(matrix: Matrix(Int), marked: Set(Point), won: Option(Int))
 }
 
 pub type Bingo {
