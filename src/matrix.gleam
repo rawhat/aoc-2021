@@ -5,7 +5,7 @@ import gleam/iterator.{Done, Iterator, Next}
 import gleam/list
 import gleam/option.{None, Option, Some}
 import gleam/pair
-import gleam/regex
+import gleam/regex.{Regex}
 import gleam/result
 import gleam/string
 import gleam/string_builder
@@ -21,10 +21,8 @@ pub type Point =
 pub type Elements(a) =
   #(Point, a)
 
-pub fn from_string(contents: String) -> Matrix(String) {
-  assert Ok(re) = regex.from_string("\\s*([0-9]+)\\s*")
-
-  contents
+fn from_string_with_re(data: String, re: Regex) -> Matrix(String) {
+  data
   |> string.trim
   |> string.split(on: "\n")
   |> list.fold(
@@ -40,6 +38,42 @@ pub fn from_string(contents: String) -> Matrix(String) {
     },
   )
   |> Matrix
+}
+
+pub fn from_digit_map(digits: String) -> Matrix(String) {
+  assert Ok(re) = regex.from_string("([0-9])")
+
+  from_string_with_re(digits, re)
+}
+
+pub fn to_digit_map(matrix: Matrix(a), mapper: fn(a) -> String) -> String {
+  let #(columns, rows) = get_dimensions(matrix)
+
+  iterator.range(from: 0, to: rows)
+  |> iterator.fold(
+    string_builder.from_string(""),
+    fn(str, row_index) {
+      iterator.range(from: 0, to: columns)
+      |> iterator.fold(
+        str,
+        fn(str, col_index) {
+          let value = case get(matrix, #(col_index, row_index)) {
+            Some(value) -> mapper(value)
+            _ -> "--"
+          }
+          string_builder.append(str, value)
+        },
+      )
+      |> string_builder.append("\n")
+    },
+  )
+  |> string_builder.to_string
+}
+
+pub fn from_string(contents: String) -> Matrix(String) {
+  assert Ok(re) = regex.from_string("\\s*([0-9]+)\\s*")
+
+  from_string_with_re(contents, re)
 }
 
 pub fn to_string(matrix: Matrix(a)) -> String {
@@ -110,21 +144,57 @@ pub fn get(matrix: Matrix(a), location: Point) -> Option(a) {
   }
 }
 
-pub fn set(matrix: Matrix(a), location: Point, value: a) -> Matrix(a) {
-  let #(x, y) = location
-  case matrix {
-    Matrix(arr) -> {
-      let row =
-        arr
-        |> gleam_array.get(y)
-        |> option.unwrap(gleam_array.new())
-        |> gleam_array.set(x, value)
-      let updated = gleam_array.set(row, x, value)
-      arr
-      |> gleam_array.set(y, updated)
-      |> Matrix
+pub fn get_adjacents(
+  points: Matrix(a),
+  position: Point,
+  with_diagonal with_diagonal: Bool,
+) -> List(Elements(a)) {
+  let #(col, row) = position
+
+  [#(-1, 0), #(0, -1), #(1, 0), #(0, 1)]
+  |> fn(l) {
+    case with_diagonal {
+      True -> list.append(l, [#(-1, 1), #(-1, -1), #(1, -1), #(1, 1)])
+      False -> l
     }
   }
+  |> list.filter_map(fn(pos) {
+    let #(col_offset, row_offset) = pos
+    let adjacent = #(col + col_offset, row + row_offset)
+    case adjacent {
+      value if value == position -> Error(Nil)
+      #(col, row) if col < 0 || row < 0 -> Error(Nil)
+      value ->
+        value
+        |> get(points, _)
+        |> option.map(fn(num) { #(value, num) })
+        |> option.to_result(Nil)
+    }
+  })
+}
+
+pub fn set(matrix: Matrix(a), location: Point, value: a) -> Matrix(a) {
+  let #(x, y) = location
+  let Matrix(arr) = matrix
+  let row =
+    arr
+    |> gleam_array.get(y)
+    |> option.unwrap(gleam_array.new())
+    |> gleam_array.set(x, value)
+  let updated = gleam_array.set(row, x, value)
+  arr
+  |> gleam_array.set(y, updated)
+  |> Matrix
+}
+
+pub fn update(
+  matrix: Matrix(a),
+  location: Point,
+  updater: fn(Option(a)) -> a,
+) -> Matrix(a) {
+  let existing = get(matrix, location)
+
+  set(matrix, location, updater(existing))
 }
 
 pub fn from_iterator(iter: Iterator(Elements(a))) -> Matrix(a) {

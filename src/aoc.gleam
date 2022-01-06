@@ -11,6 +11,7 @@ import days/seven
 import days/eight
 import days/nine
 import days/ten
+import days/eleven
 
 pub fn main() {
   [
@@ -34,6 +35,8 @@ pub fn main() {
     #(nine.part_two, "Day 9 Part 2: "),
     #(ten.part_one, "Day 10 Part 1: "),
     #(ten.part_two, "Day 10 Part 2: "),
+    #(eleven.part_one, "Day 11 Part 1: "),
+    #(eleven.part_two, "Day 11 Part 2: "),
   ]
   |> list.each(fn(day) {
     case day {
