@@ -7,6 +7,17 @@ import gleam_array
 pub external fn should_equal(a, a) -> Nil =
   "gleam_stdlib" "should_equal"
 
+pub fn should_contain(actual: List(a), expected: List(a)) -> Nil {
+  expected
+  |> list.each(fn(exp) {
+    actual
+    |> list.contains(exp)
+    |> should_equal(True)
+  })
+
+  Nil
+}
+
 pub external fn read_file(name: String) -> Result(String, String) =
   "file" "read_file"
 
