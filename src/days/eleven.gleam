@@ -73,7 +73,7 @@ pub fn make_flash(cavern: Cavern, point: Point) -> Cavern {
     cavern,
     point,
     fn(opt) {
-      assert Some(Octopus(energy, False)) = opt
+      assert Some(Octopus(_, False)) = opt
 
       Octopus(0, True)
     },

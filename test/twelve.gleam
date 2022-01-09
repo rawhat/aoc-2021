@@ -89,71 +89,68 @@ start-RW"
   |> should_equal(226)
 }
 
-pub fn it_should_work_with_multiples_test() {
+pub fn it_should_work_with_multiples_one_test() {
   ["A", "B", "c", "d", "e"]
   |> twelve.has_no_lowercase_multiples
   |> should_equal(True)
+}
 
+pub fn it_should_work_with_multiples_two_test() {
   ["A", "B", "c", "c", "d", "e"]
   |> twelve.has_no_lowercase_multiples
   |> should_equal(False)
+}
 
+pub fn it_should_work_with_multiples_three_test() {
   ["A", "B", "c", "d", "e"]
   |> twelve.has_only_one_lowercase_multiple
   |> should_equal(True)
+}
 
+pub fn it_should_work_with_multiples_four_test() {
   ["A", "B", "c", "c", "d", "e"]
   |> twelve.has_only_one_lowercase_multiple
   |> should_equal(True)
+}
 
+pub fn it_should_work_with_multiples_five_test() {
   ["A", "B", "c", "c", "d", "d", "e"]
   |> twelve.has_only_one_lowercase_multiple
   |> should_equal(False)
 }
-// pub fn it_should_do_the_complex_one_test_() {
-//   test_with_timeout(
-//     10,
-//     fn() {
-//       "start-A
-// start-b
-// A-c
-// A-b
-// b-d
-// A-end
-// b-end"
-//       |> twelve.parse_input
-//       |> twelve.get_all_paths(twelve.has_only_one_lowercase_multiple)
-//       |> list.length
-//       |> should_equal(3510)
-//     },
-//   )
-// }
-// pub fn it_should_do_the_complex_one_test_() {
-//   test_with_timeout(
-//     3600,
-//     fn() {
-//       "fs-end
-// he-DX
-// fs-he
-// start-DX
-// pj-DX
-// end-zg
-// zg-sl
-// zg-pj
-// pj-he
-// RW-he
-// fs-DX
-// pj-RW
-// zg-RW
-// start-pj
-// he-WI
-// zg-he
-// pj-fs
-// start-RW"
-//       |> twelve.parse_input
-//       |> twelve.get_all_paths(twelve.has_only_one_lowercase_multiple)
-//       |> list.length
-//       |> should_equal(3510)
-//     },
-//   )
-// }
+
+pub fn it_should_work_with_multiples_six_test() {
+  ["start", "A", "b", "A", "b", "A", "b"]
+  |> twelve.has_only_one_lowercase_multiple
+  |> should_equal(False)
+}
+
+pub fn it_should_do_the_complex_one_test_() {
+  test_with_timeout(
+    3600,
+    fn() {
+      "fs-end
+he-DX
+fs-he
+start-DX
+pj-DX
+end-zg
+zg-sl
+zg-pj
+pj-he
+RW-he
+fs-DX
+pj-RW
+zg-RW
+start-pj
+he-WI
+zg-he
+pj-fs
+start-RW"
+      |> twelve.parse_input
+      |> twelve.get_all_paths(twelve.has_only_one_lowercase_multiple)
+      |> list.length
+      |> should_equal(3509)
+    },
+  )
+}

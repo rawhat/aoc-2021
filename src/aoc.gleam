@@ -39,8 +39,8 @@ pub fn main() {
     #(eleven.part_one, "Day 11 Part 1: "),
     #(eleven.part_two, "Day 11 Part 2: "),
     #(twelve.part_one, "Day 12 Part 1: "),
+    #(twelve.part_two, "Day 12 Part 2: "),
   ]
-  // #(twelve.part_two, "Day 12 Part 2: "),
   |> list.each(fn(day) {
     case day {
       #(func, message) -> {

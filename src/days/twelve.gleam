@@ -40,37 +40,33 @@ pub fn parse_input(data: String) -> Paths {
   |> map.map_values(fn(_, pairs) { list.map(pairs, pair.second) })
 }
 
-// count lower case letters, if count > 2 for any, false
-fn multiple_lowercase_entries(path: Path) -> Int {
-  path
-  |> list.fold(
-    map.new(),
-    fn(paths, ltr) {
-      case string.lowercase(ltr) == ltr {
-        False -> paths
-        True ->
-          map.update(
-            paths,
-            ltr,
-            fn(opt) {
-              opt
-              |> option.map(fn(v) { v + 1 })
-              |> option.unwrap(1)
-            },
-          )
-      }
-    },
-  )
-  |> map.filter(fn(_, value) { value > 1 })
-  |> map.size
+pub fn get_lowercase(path: Path) -> Path {
+  list.filter(path, fn(letter) { string.lowercase(letter) == letter })
 }
 
 pub fn has_no_lowercase_multiples(path: Path) -> Bool {
-  multiple_lowercase_entries(path) == 0
+  let lowercase_letters = get_lowercase(path)
+
+  let unique_lowercase =
+    lowercase_letters
+    |> list.unique
+    |> list.length
+
+  list.length(lowercase_letters) == unique_lowercase
 }
 
 pub fn has_only_one_lowercase_multiple(path: Path) -> Bool {
-  multiple_lowercase_entries(path) <= 1
+  let lowercase_letters = get_lowercase(path)
+
+  let unique_lowercase =
+    lowercase_letters
+    |> list.unique
+    |> list.length
+
+  let lowercase_count = list.length(lowercase_letters)
+  let with_one_duplicate = lowercase_count - 1
+
+  lowercase_count == unique_lowercase || with_one_duplicate == unique_lowercase
 }
 
 pub fn do_get_all_paths(
@@ -81,7 +77,6 @@ pub fn do_get_all_paths(
   let [last_node, ..] = current_path
 
   case map.get(graph, last_node) {
-    // this should be "end", since it has no destinations
     Error(_) -> [current_path]
     Ok(destinations) ->
       destinations

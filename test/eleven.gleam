@@ -61,7 +61,7 @@ pub fn it_should_solve_part_one_test() {
     test_data()
     |> eleven.parse_energy_map
 
-  let #(flashes, final_cavern) =
+  let #(flashes, _) =
     iterator.range(from: 0, to: 100)
     |> iterator.fold(
       #(0, cavern),
