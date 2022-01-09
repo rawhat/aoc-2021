@@ -1,12 +1,8 @@
-import gleam/function
 import gleam/io
 import gleam/iterator
 import gleam/list
 import gleam/map.{Map}
-import gleam/option
 import gleam/pair
-import gleam/regex
-import gleam/set.{Set}
 import gleam/string
 import util.{read_file}
 
@@ -32,10 +28,6 @@ pub fn parse_input(data: String) -> Paths {
     }
     |> iterator.from_list
   })
-  |> iterator.to_list
-  |> set.from_list
-  |> set.to_list
-  |> iterator.from_list
   |> iterator.group(by: pair.first)
   |> map.map_values(fn(_, pairs) { list.map(pairs, pair.second) })
 }
