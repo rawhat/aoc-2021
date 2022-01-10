@@ -67,7 +67,7 @@ pub fn get_adjacents(
 
 pub fn get_low_points(points: Matrix(Int)) -> List(Elements(Int)) {
   points
-  |> matrix.iterate
+  |> matrix.to_iterator
   |> iterator.filter(fn(element) {
     let #(position, value) = element
     let adjacents = get_adjacents(points, position, True)

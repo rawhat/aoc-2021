@@ -56,7 +56,7 @@ pub fn iterating_should_modify_values_test() {
   let mapped =
     sample_text
     |> matrix.from_string
-    |> matrix.iterate
+    |> matrix.to_iterator
     |> iterator.map(fn(tup) { pair.map_second(tup, int.parse) })
     |> iterator.map(fn(tup) { pair.map_second(tup, result.unwrap(_, 0)) })
     |> iterator.map(fn(tup) { pair.map_second(tup, fn(v) { v * 2 }) })

@@ -66,7 +66,7 @@ pub fn mark_winner_with_valid_win_test() {
 ",
     )
     |> matrix.from_string
-    |> matrix.iterate
+    |> matrix.to_iterator
     |> iterator.map(fn(tup) { pair.map_second(tup, int.parse) })
     |> iterator.map(fn(tup) { pair.map_second(tup, result.unwrap(_, 0)) })
     |> matrix.from_iterator

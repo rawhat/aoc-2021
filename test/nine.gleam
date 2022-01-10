@@ -38,7 +38,7 @@ pub fn get_low_points_test() {
   input
   |> get_low_points
   |> list.map(pair.first)
-  |> should_equal([#(1, 0), #(9, 0), #(2, 2), #(6, 4)])
+  |> should_equal([#(1, 0), #(2, 2), #(6, 4), #(9, 0)])
 }
 
 pub fn it_should_get_offsets_test() {

@@ -22,7 +22,7 @@ pub fn build_board(input: String) -> Board {
   let board =
     input
     |> matrix.from_string
-    |> matrix.iterate
+    |> matrix.to_iterator
     |> iterator.map(fn(p) {
       p
       |> pair.map_second(int.parse)
@@ -55,7 +55,7 @@ pub fn mark_matching(board: Board, number: Int) -> Board {
   let Board(m, marked, won) = board
   let found =
     m
-    |> matrix.iterate
+    |> matrix.to_iterator
     |> iterator.find(fn(tup) {
       case tup {
         #(_, value) if value == number -> True
@@ -99,7 +99,7 @@ pub fn calculate_score(board: Board) -> Int {
 
   let unmarked =
     values
-    |> matrix.iterate
+    |> matrix.to_iterator
     |> iterator.filter(fn(tup) {
       let #(pos, _) = tup
       set.contains(marked, pos) == False

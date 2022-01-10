@@ -40,13 +40,22 @@ fn from_string_with_re(data: String, re: Regex) -> Matrix(String) {
   |> Matrix
 }
 
+pub fn from_character_map(character_map: String) -> Matrix(String) {
+  assert Ok(re) = regex.from_string("(.)")
+
+  from_string_with_re(character_map, re)
+}
+
 pub fn from_digit_map(digits: String) -> Matrix(String) {
   assert Ok(re) = regex.from_string("([0-9])")
 
   from_string_with_re(digits, re)
 }
 
-pub fn to_digit_map(matrix: Matrix(a), mapper: fn(a) -> String) -> String {
+pub fn to_digit_map(
+  matrix: Matrix(a),
+  mapper: fn(Option(a)) -> String,
+) -> String {
   let #(columns, rows) = get_dimensions(matrix)
 
   iterator.range(from: 0, to: rows)
@@ -57,23 +66,40 @@ pub fn to_digit_map(matrix: Matrix(a), mapper: fn(a) -> String) -> String {
       |> iterator.fold(
         str,
         fn(str, col_index) {
-          let value = case get(matrix, #(col_index, row_index)) {
-            Some(value) -> mapper(value)
-            _ -> "--"
-          }
-          string_builder.append(str, value)
+          matrix
+          |> get(#(col_index, row_index))
+          |> mapper
+          |> string_builder.append(str, _)
         },
       )
       |> string_builder.append("\n")
     },
   )
   |> string_builder.to_string
+  |> string.trim
 }
 
 pub fn from_string(contents: String) -> Matrix(String) {
   assert Ok(re) = regex.from_string("\\s*([0-9]+)\\s*")
 
   from_string_with_re(contents, re)
+}
+
+pub fn fill_holes(matrix: Matrix(a), with mapper: fn(Point) -> a) -> Matrix(a) {
+  let #(columns, rows) = get_dimensions(matrix)
+
+  iterator.range(from: 0, to: columns)
+  |> iterator.flat_map(fn(column) {
+    iterator.range(from: 0, to: rows)
+    |> iterator.map(fn(row) { #(column, row) })
+  })
+  |> iterator.map(fn(point) {
+    case get(matrix, point) {
+      Some(value) -> #(point, value)
+      None -> #(point, mapper(point))
+    }
+  })
+  |> from_iterator
 }
 
 pub fn to_string(matrix: Matrix(a)) -> String {
@@ -100,20 +126,24 @@ pub fn to_string(matrix: Matrix(a)) -> String {
       }
       let value_strings =
         row
-        |> gleam_array.map(fn(col, _) {
-          let col_dyn = dynamic.from(col)
-          case dynamic.classify(col_dyn) {
-            "String" ->
-              col_dyn
-              |> dynamic.string
-              |> result.unwrap("--")
-            "Int" ->
-              col_dyn
-              |> dynamic.int
-              |> result.unwrap(-1)
-              |> int.to_string
-            _ -> "??"
-          }
+        |> gleam_array.map(fn(col_opt, _) {
+          col_opt
+          |> option.map(fn(col) {
+            let col_dyn = dynamic.from(col)
+            case dynamic.classify(col_dyn) {
+              "String" ->
+                col_dyn
+                |> dynamic.string
+                |> result.unwrap("-")
+              "Int" ->
+                col_dyn
+                |> dynamic.int
+                |> result.unwrap(-1)
+                |> int.to_string
+              _ -> "?"
+            }
+          })
+          |> option.unwrap("?")
         })
         |> gleam_array.to_list
         |> string.join(" ")
@@ -208,25 +238,40 @@ pub fn from_iterator(iter: Iterator(Elements(a))) -> Matrix(a) {
   )
 }
 
-pub fn iterate(matrix: Matrix(a)) -> Iterator(Elements(a)) {
-  iterator.unfold(
-    from: #(matrix, 0, 0),
-    with: fn(acc) {
-      let #(matrix, x, y) = acc
-      case get(matrix, #(x, y)), get(matrix, #(0, y + 1)) {
-        Some(value), _ ->
-          Next(element: #(#(x, y), value), accumulator: #(matrix, x + 1, y))
-        None, Some(value) ->
-          Next(element: #(#(0, y + 1), value), accumulator: #(matrix, 1, y + 1))
-        None, None -> Done
-      }
-    },
-  )
+pub fn to_iterator(matrix: Matrix(a)) -> Iterator(Elements(a)) {
+  let #(col, row) = get_dimensions(matrix)
+  iterator.range(from: 0, to: col)
+  |> iterator.flat_map(fn(column) {
+    iterator.range(from: 0, to: row)
+    |> iterator.map(fn(r) { #(column, r) })
+  })
+  |> iterator.map(fn(pos) { #(pos, get(matrix, pos)) })
+  |> iterator.filter(fn(entry) {
+    case entry {
+      #(_, Some(_)) -> True
+      _ -> False
+    }
+  })
+  |> iterator.map(fn(entry) {
+    let #(pos, Some(value)) = entry
+    #(pos, value)
+  })
+}
+
+pub fn map(matrix: Matrix(a), mapper: fn(Point, a) -> b) -> Matrix(b) {
+  matrix
+  |> to_iterator
+  |> iterator.map(fn(p) {
+    let #(pos, value) = p
+    let new_value = mapper(pos, value)
+    #(pos, new_value)
+  })
+  |> from_iterator
 }
 
 pub fn get_row(matrix: Matrix(a), index: Int) -> List(a) {
   matrix
-  |> iterate
+  |> to_iterator
   |> iterator.filter(fn(tup) {
     let #(#(_, row), _) = tup
     row == index
@@ -237,26 +282,13 @@ pub fn get_row(matrix: Matrix(a), index: Int) -> List(a) {
 
 pub fn get_column(matrix: Matrix(a), index: Int) -> List(a) {
   matrix
-  |> iterate
+  |> to_iterator
   |> iterator.filter(fn(tup) {
     let #(#(column, _), _) = tup
     column == index
   })
   |> iterator.map(pair.second)
   |> iterator.to_list
-}
-
-pub fn get_dimensions(matrix: Matrix(a)) -> Point {
-  let Matrix(values) = matrix
-
-  let rows = gleam_array.size(values)
-  let columns =
-    values
-    |> gleam_array.get(0)
-    |> option.unwrap(gleam_array.new())
-    |> gleam_array.size
-
-  #(rows, columns)
 }
 
 pub fn rows(matrix: Matrix(a)) -> List(List(Point)) {
@@ -281,4 +313,26 @@ pub fn columns(matrix: Matrix(a)) -> List(List(Point)) {
     |> iterator.to_list
   })
   |> iterator.to_list
+}
+
+pub fn get_dimensions(matrix: Matrix(a)) -> Point {
+  let total_rows = gleam_array.sparse_size(matrix.elements)
+
+  let total_columns =
+    matrix.elements
+    |> gleam_array.map(fn(opt, _) {
+      opt
+      |> option.unwrap(gleam_array.new())
+      |> gleam_array.sparse_size
+    })
+    |> gleam_array.fold(
+      0,
+      fn(max, next) {
+        next
+        |> option.unwrap(0)
+        |> int.max(max)
+      },
+    )
+
+  #(total_columns, total_rows)
 }

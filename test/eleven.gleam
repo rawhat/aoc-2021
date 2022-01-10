@@ -3,7 +3,7 @@ import gleam/int
 import gleam/io
 import gleam/iterator
 import gleam/list
-import gleam/option.{Some}
+import gleam/option.{Option, Some}
 import gleam/pair
 import gleam/result
 import matrix
@@ -40,7 +40,12 @@ pub fn it_should_perform_a_step_test() {
   cavern
   |> eleven.do_iteration
   |> pair.second
-  |> matrix.to_digit_map(fn(octo: Octopus) { int.to_string(octo.energy) })
+  |> matrix.to_digit_map(fn(octo: Option(Octopus)) {
+    octo
+    |> option.map(fn(octo: Octopus) { octo.energy })
+    |> option.unwrap(0)
+    |> int.to_string
+  })
   |> should_equal(
     "6594254334
 3856965822
@@ -51,8 +56,7 @@ pub fn it_should_perform_a_step_test() {
 3287952832
 7993992245
 5957959665
-6394862637
-",
+6394862637",
   )
 }
 

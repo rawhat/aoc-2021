@@ -18,7 +18,7 @@ pub type Cavern =
 pub fn parse_energy_map(data: String) -> Cavern {
   data
   |> matrix.from_digit_map
-  |> matrix.iterate
+  |> matrix.to_iterator
   |> iterator.map(fn(p) {
     let #(pos, value) = p
     assert Ok(energy) = int.parse(value)
@@ -29,7 +29,7 @@ pub fn parse_energy_map(data: String) -> Cavern {
 
 pub fn increment_energy(cavern: Cavern) -> Cavern {
   cavern
-  |> matrix.iterate
+  |> matrix.to_iterator
   |> iterator.map(fn(entry) {
     let #(pos, Octopus(energy, _)) = entry
     #(pos, Octopus(energy + 1, False))
@@ -59,7 +59,7 @@ pub fn increment_energies(cavern: Cavern, points: List(Point)) -> Cavern {
 
 pub fn find_flashes(cavern: Cavern) -> List(Point) {
   cavern
-  |> matrix.iterate
+  |> matrix.to_iterator
   |> iterator.filter(fn(entry) {
     let #(_, Octopus(energy, has_flashed)) = entry
     energy > 9 && has_flashed == False
@@ -163,7 +163,7 @@ pub fn part_two() {
   )
   |> iterator.take_while(fn(cavern) {
     cavern
-    |> matrix.iterate
+    |> matrix.to_iterator
     |> iterator.any(fn(entry) {
       let #(_, Octopus(_, has_flashed)) = entry
       case has_flashed {
