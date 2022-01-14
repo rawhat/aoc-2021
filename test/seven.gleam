@@ -1,4 +1,4 @@
-import days/seven.{calculate_movement_cost, find_cheapest_movements, parse_input}
+import days/seven.{calculate_movement_cost, parse_input}
 import util.{should_equal}
 
 const input = "16,1,2,0,4,2,7,1,2,14"

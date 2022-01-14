@@ -1,6 +1,6 @@
 import gleam/int
 import gleam/io
-import gleam/iterator.{Done, Next}
+import gleam/iterator
 import gleam/list
 import gleam/map.{Map}
 import gleam/option.{None, Some}

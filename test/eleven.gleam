@@ -1,4 +1,4 @@
-import days/eleven.{Cavern, Octopus}
+import days/eleven.{Octopus}
 import gleam/int
 import gleam/io
 import gleam/iterator

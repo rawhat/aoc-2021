@@ -3,7 +3,7 @@ import gleam/io
 import gleam/iterator
 import gleam/list
 import gleam/map.{Map}
-import gleam/option.{None, Some}
+import gleam/option
 import gleam/result
 import gleam/string
 import gleam/string_builder

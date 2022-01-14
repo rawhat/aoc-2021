@@ -1,8 +1,8 @@
 import gleam/int
 import gleam/io
-import gleam/iterator.{Done, Next}
+import gleam/iterator.{Next}
 import gleam/list
-import gleam/option.{None, Some}
+import gleam/option.{Some}
 import gleam/pair
 import gleam/result
 import matrix.{Matrix, Point}

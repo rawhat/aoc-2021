@@ -1,5 +1,5 @@
 import days/six.{age_and_reproduce, parse_input}
-import gleam/iterator.{Next}
+import gleam/iterator
 import gleam/list
 import gleam/map
 import gleam/result

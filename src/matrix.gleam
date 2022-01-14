@@ -1,7 +1,7 @@
 import gleam/dynamic
 import gleam/int
 import gleam/io
-import gleam/iterator.{Done, Iterator, Next}
+import gleam/iterator.{Iterator}
 import gleam/list
 import gleam/option.{None, Option, Some}
 import gleam/pair

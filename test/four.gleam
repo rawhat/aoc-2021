@@ -6,9 +6,7 @@ import gleam/pair
 import gleam/result
 import gleam/set
 import gleam/string
-import days/four.{
-  Bingo, Board, calculate_last_winners_winning_value, calculate_winning_value, mark_winner,
-}
+import days/four.{Bingo, Board, mark_winner}
 import matrix
 import util.{should_equal}
 

@@ -5,7 +5,7 @@ import gleam/io
 import gleam/list
 import gleam/option.{Some}
 import gleam/pair
-import matrix.{Elements, Matrix}
+import matrix.{Matrix}
 import util.{should_equal}
 
 pub fn get_test_data() -> Matrix(Int) {

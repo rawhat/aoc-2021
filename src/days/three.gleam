@@ -2,7 +2,7 @@ import gleam/float
 import gleam/int
 import gleam/io
 import gleam/list
-import gleam/map.{Map}
+import gleam/map
 import gleam/option.{None, Some}
 import gleam/pair
 import gleam/string

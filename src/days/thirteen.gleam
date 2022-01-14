@@ -94,7 +94,7 @@ pub fn fold(dots: Matrix(Bool), fold: Fold) -> Matrix(Bool) {
 pub fn get_paper() -> Paper {
   assert Ok(data) = read_file("src/days/thirteen.txt")
 
-  let paper = parse_input(data)
+  parse_input(data)
 }
 
 pub fn part_one() {
