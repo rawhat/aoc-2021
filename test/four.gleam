@@ -6,9 +6,9 @@ import gleam/pair
 import gleam/result
 import gleam/set
 import gleam/string
+import gleeunit/should
 import days/four.{Bingo, Board, mark_winner}
 import matrix
-import util.{should_equal}
 
 const test_input = "7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1
 
@@ -44,7 +44,7 @@ pub fn test_first_move_on_test_input_test() {
       marked
     })
 
-  should_equal(
+  should.equal(
     marked_one,
     set.from_list([#(3, 0), #(3, 1), #(1, 2), #(4, 2), #(4, 3)]),
   )
@@ -73,19 +73,19 @@ pub fn mark_winner_with_valid_win_test() {
 
   let Board(_, _, won) = mark_winner(winning_board, 123456)
 
-  should_equal(won, Some(123456))
+  should.equal(won, Some(123456))
 }
 
 pub fn get_winner_test() {
   let game = four.parse_input(test_input)
   let value = four.calculate_winning_value(game)
 
-  should_equal(value, 4512)
+  should.equal(value, 4512)
 }
 
 pub fn get_part_two_test() {
   let game = four.parse_input(test_input)
   let value = four.calculate_last_winners_winning_value(game)
 
-  should_equal(value, 1924)
+  should.equal(value, 1924)
 }

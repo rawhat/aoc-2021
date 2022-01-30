@@ -1,5 +1,5 @@
 import days/seven.{calculate_movement_cost, parse_input}
-import util.{should_equal}
+import gleeunit/should
 
 const input = "16,1,2,0,4,2,7,1,2,14"
 
@@ -9,5 +9,5 @@ pub fn calculates_correct_movement_cost_test() {
     |> parse_input
     |> calculate_movement_cost(2, False)
 
-  should_equal(cost, 37)
+  should.equal(cost, 37)
 }

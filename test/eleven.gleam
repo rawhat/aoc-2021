@@ -6,8 +6,8 @@ import gleam/list
 import gleam/option.{Option, Some}
 import gleam/pair
 import gleam/result
+import gleeunit/should
 import matrix
-import util.{should_equal}
 
 fn test_data() -> String {
   "5483143223
@@ -29,7 +29,7 @@ pub fn it_should_parse_the_input_test() {
 
   energy_map
   |> matrix.get(#(0, 0))
-  |> should_equal(Some(Octopus(5, False)))
+  |> should.equal(Some(Octopus(5, False)))
 }
 
 pub fn it_should_perform_a_step_test() {
@@ -46,7 +46,7 @@ pub fn it_should_perform_a_step_test() {
     |> option.unwrap(0)
     |> int.to_string
   })
-  |> should_equal(
+  |> should.equal(
     "6594254334
 3856965822
 6375667284
@@ -77,5 +77,5 @@ pub fn it_should_solve_part_one_test() {
       },
     )
 
-  should_equal(flashes, 1656)
+  should.equal(flashes, 1656)
 }

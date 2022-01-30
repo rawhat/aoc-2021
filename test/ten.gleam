@@ -3,7 +3,7 @@ import gleam/int
 import gleam/list
 import gleam/result
 import gleam/string
-import util.{should_equal}
+import gleeunit/should
 
 pub fn test_input() -> String {
   "[({(<(())[]>[[{[]{<()<>>
@@ -23,7 +23,7 @@ pub fn it_should_parse_lines_test() {
   |> string.split(on: "\n")
   |> list.map(ten.parse_line)
   |> list.filter(result.is_error)
-  |> should_equal([// Ok(_),
+  |> should.equal([// Ok(_),
     // Ok(_),
     Error("}"), // Ok(_),
     Error(")"), Error("]"), // Ok(_),
@@ -40,7 +40,7 @@ pub fn it_should_score_incompletes_test() {
     |> list.map(ten.complete_line(_, []))
 
   completed
-  |> should_equal([
+  |> should.equal([
     ["}", "}", "]", "]", ")", "}", ")", "]"],
     [")", "}", ">", "]", "}", ")"],
     ["}", "}", ">", "}", ">", ")", ")", ")", ")"],
@@ -53,12 +53,12 @@ pub fn it_should_score_incompletes_test() {
     |> list.map(ten.score_line(_, 0))
 
   scores
-  |> should_equal([288957, 5566, 1480781, 995444, 294])
+  |> should.equal([288957, 5566, 1480781, 995444, 294])
 
   let middle = list.length(scores) / 2
 
   scores
   |> list.sort(int.compare)
   |> list.at(middle)
-  |> should_equal(Ok(288957))
+  |> should.equal(Ok(288957))
 }

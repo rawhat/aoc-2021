@@ -3,16 +3,14 @@ import gleam/pair
 import gleam/result
 import gleam/string
 import gleam_array
-
-pub external fn should_equal(a, a) -> Nil =
-  "gleam_stdlib" "should_equal"
+import gleeunit/should
 
 pub fn should_contain(actual: List(a), expected: List(a)) -> Nil {
   expected
   |> list.each(fn(exp) {
     actual
     |> list.contains(exp)
-    |> should_equal(True)
+    |> should.be_true
   })
 
   Nil

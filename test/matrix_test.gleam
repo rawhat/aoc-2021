@@ -2,8 +2,8 @@ import gleam/function
 import gleam/io
 import gleam/iterator
 import gleam/option
+import gleeunit/should
 import matrix
-import util.{should_equal}
 
 pub fn it_should_parse_digit_map_test() {
   "123
@@ -11,7 +11,7 @@ pub fn it_should_parse_digit_map_test() {
 789"
   |> matrix.from_digit_map
   |> matrix.to_digit_map(option.unwrap(_, "."))
-  |> should_equal("123
+  |> should.equal("123
 456
 789")
 }
@@ -28,6 +28,6 @@ pub fn it_should_parse_character_map_test() {
       False -> "."
     }
   })
-  |> should_equal("#.
+  |> should.equal("#.
 .#")
 }

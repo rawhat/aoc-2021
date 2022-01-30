@@ -3,7 +3,7 @@ import gleam/iterator
 import gleam/list
 import gleam/map
 import gleam/result
-import util.{should_equal}
+import gleeunit/should
 
 fn get_test_input() -> String {
   "3,4,3,1,2"
@@ -14,7 +14,7 @@ pub fn it_parses_input_test() {
 
   let expected = map.from_list([#(1, 1), #(2, 1), #(3, 2), #(4, 1)])
 
-  should_equal(fish, expected)
+  should.equal(fish, expected)
 }
 
 pub fn it_ages_and_reproduces_once_test() {
@@ -35,7 +35,7 @@ pub fn it_ages_and_reproduces_once_test() {
       #(7, 0),
       #(8, 0),
     ])
-  should_equal(fish, expected)
+  should.equal(fish, expected)
 }
 
 pub fn it_has_count_after_18_days_test() {
@@ -49,7 +49,7 @@ pub fn it_has_count_after_18_days_test() {
     |> map.values
     |> list.fold(0, fn(sum, count) { sum + count })
 
-  should_equal(eighteen, 26)
+  should.equal(eighteen, 26)
 }
 
 pub fn it_should_make_it_to_80_days_test() {
@@ -63,5 +63,5 @@ pub fn it_should_make_it_to_80_days_test() {
     |> map.values
     |> list.fold(0, fn(sum, count) { sum + count })
 
-  should_equal(eighty, 5934)
+  should.equal(eighty, 5934)
 }

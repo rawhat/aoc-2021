@@ -4,7 +4,8 @@ import gleam/list
 import gleam/map
 import gleam/set
 import gleam/string
-import util.{should_contain, should_equal}
+import gleeunit/should
+import util.{should_contain}
 
 external fn test_with_timeout(timeout: Int, func: fn() -> Nil) -> Nil =
   "erl_util" "test_with_timeout"
@@ -20,7 +21,7 @@ b-end"
 
   data
   |> twelve.parse_input
-  |> should_equal(map.from_list([
+  |> should.equal(map.from_list([
     #("start", ["A", "b"]),
     #("A", ["c", "b", "end"]),
     #("b", ["A", "d", "end"]),
@@ -63,7 +64,7 @@ kj-dc"
   |> twelve.parse_input
   |> twelve.get_all_paths(twelve.has_no_lowercase_multiples)
   |> list.length
-  |> should_equal(19)
+  |> should.equal(19)
 
   "fs-end
 he-DX
@@ -86,43 +87,43 @@ start-RW"
   |> twelve.parse_input
   |> twelve.get_all_paths(twelve.has_no_lowercase_multiples)
   |> list.length
-  |> should_equal(226)
+  |> should.equal(226)
 }
 
 pub fn it_should_validate_no_multiple_with_no_multiple_test() {
   ["A", "B", "c", "d", "e"]
   |> twelve.has_no_lowercase_multiples
-  |> should_equal(True)
+  |> should.equal(True)
 }
 
 pub fn it_should_validate_no_multiple_with_multiple_test() {
   ["A", "B", "c", "c", "d", "e"]
   |> twelve.has_no_lowercase_multiples
-  |> should_equal(False)
+  |> should.equal(False)
 }
 
 pub fn it_should_validate_no_multiple_with_one_multiple_test() {
   ["A", "B", "c", "d", "e"]
   |> twelve.has_only_one_lowercase_multiple
-  |> should_equal(True)
+  |> should.equal(True)
 }
 
 pub fn it_should_validate_one_multiple_with_one_multiple_test() {
   ["A", "B", "c", "c", "d", "e"]
   |> twelve.has_only_one_lowercase_multiple
-  |> should_equal(True)
+  |> should.equal(True)
 }
 
 pub fn it_should_validate_one_multiple_with_multiple_multiples_test() {
   ["A", "B", "c", "c", "d", "d", "e"]
   |> twelve.has_only_one_lowercase_multiple
-  |> should_equal(False)
+  |> should.equal(False)
 }
 
 pub fn it_should_validate_one_multiple_with_cycle_i_had_test() {
   ["start", "A", "b", "A", "b", "A", "b"]
   |> twelve.has_only_one_lowercase_multiple
-  |> should_equal(False)
+  |> should.equal(False)
 }
 
 pub fn it_should_do_the_complex_one_test_() {
@@ -150,7 +151,7 @@ start-RW"
       |> twelve.parse_input
       |> twelve.get_all_paths(twelve.has_only_one_lowercase_multiple)
       |> list.length
-      |> should_equal(3509)
+      |> should.equal(3509)
     },
   )
 }

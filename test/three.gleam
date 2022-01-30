@@ -3,7 +3,7 @@ import days/three.{
   Binary, One, OxygenGenerator, Zero, count_bits, generate_binaries, get_equipment_rating,
   get_gamma_and_epsilon_rates, get_life_support_rating,
 }
-import util.{should_equal}
+import gleeunit/should
 
 const input = ["00100", "11110"]
 
@@ -20,7 +20,7 @@ pub fn builds_binary_from_strings_test() {
     Binary([One, One, One, One, Zero]),
   ]
 
-  should_equal(binaries, expected)
+  should.equal(binaries, expected)
 }
 
 pub fn counts_bits_by_column_test() {
@@ -29,7 +29,7 @@ pub fn counts_bits_by_column_test() {
 
   let expected = [#(1, 1), #(1, 1), #(0, 2), #(1, 1), #(2, 0)]
 
-  should_equal(counts, expected)
+  should.equal(counts, expected)
 }
 
 pub fn rates_test() {
@@ -42,7 +42,7 @@ pub fn rates_test() {
     Binary([Zero, One, Zero, Zero, One]),
   )
 
-  should_equal(rates, expected)
+  should.equal(rates, expected)
 }
 
 pub fn oxygen_rating_test() {
@@ -52,11 +52,11 @@ pub fn oxygen_rating_test() {
 
   let expected = Binary([One, Zero, One, One, One])
 
-  should_equal(oxygen_rating, expected)
+  should.equal(oxygen_rating, expected)
 }
 
 pub fn part_two_test() {
   let life_support_rating = get_life_support_rating(test_input)
 
-  should_equal(life_support_rating, 230)
+  should.equal(life_support_rating, 230)
 }

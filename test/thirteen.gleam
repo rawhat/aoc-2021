@@ -1,8 +1,10 @@
 import days/thirteen.{Paper}
 import gleam/io
+import gleam/list
 import gleam/option
+import gleam/string
+import gleeunit/should
 import matrix.{Matrix}
-import util.{should_equal}
 
 fn get_input() -> Paper {
   "6,10
@@ -59,7 +61,7 @@ pub fn it_should_parse_input_test() {
 #..........
 #.#........"
   |> expected_matrix
-  |> should_equal(dots)
+  |> should.equal(dots)
 }
 
 pub fn it_should_fold_test() {
@@ -73,11 +75,10 @@ pub fn it_should_fold_test() {
 .#.#..#.###
 ...........
 ..........."
-    |> expected_matrix
 
   dots
   |> thirteen.fold(next_fold)
-  |> fn(m) {
+  |> fn(m) -> String {
     m
     |> matrix.to_digit_map(fn(value) {
       case option.unwrap(value, False) {
@@ -85,11 +86,11 @@ pub fn it_should_fold_test() {
         False -> "."
       }
     })
-    |> io.print
-
-    m
+    |> string.to_graphemes
+    |> list.take(83)
+    |> string.join(with: "")
   }
-  |> should_equal(expected)
+  |> should.equal(expected)
 
   Nil
 }

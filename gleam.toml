@@ -11,8 +11,7 @@ version = "0.1.0"
 
 [dependencies]
 gleam_stdlib = "~> 0.18"
-gleeunit = "~> 0.4"
 gleam_erlang = "~> 0.5"
 
 [dev-dependencies]
-# some_test_package = "~> 1.0"
+gleeunit = "~> 0.6"

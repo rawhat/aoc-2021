@@ -6,8 +6,8 @@ import gleam/order
 import gleam/pair
 import gleam/result
 import gleam/string
+import gleeunit/should
 import matrix
-import util.{should_equal}
 
 pub fn main() {
   gleeunit.main()
@@ -31,7 +31,7 @@ pub fn generate_from_string_test() {
 [9 10 11 12]
 ")
 
-  should_equal(m, expected)
+  should.equal(m, expected)
 }
 
 pub fn set_at_value_test() {
@@ -49,7 +49,7 @@ pub fn set_at_value_test() {
 [9 10 0 12]
 ")
 
-  should_equal(m, expected)
+  should.equal(m, expected)
 }
 
 pub fn iterating_should_modify_values_test() {
@@ -69,5 +69,5 @@ pub fn iterating_should_modify_values_test() {
 [18 20 22 24]
 ")
 
-  should_equal(mapped, expected)
+  should.equal(mapped, expected)
 }
